@@ -21,6 +21,14 @@ app.get('/', (req, res) => {
   });
 });
 
+// Ping endpoint for health check
+app.get('/ping', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'Pong! Server is running' 
+  });
+});
+
 // Routes
 app.use('/api', storyRoutes);
 
@@ -33,7 +41,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
+// 404 handler - must be last
 app.use('*', (req, res) => {
   res.status(404).json({ 
     success: false, 
@@ -41,17 +49,12 @@ app.use('*', (req, res) => {
   });
 });
 
-app.use('/ping', (req, res) => {
-  res.json({ 
-    success: true, 
-    message: 'Pong! Server is running' 
-  });
+// Start server for localhost development
+app.listen(PORT, () => {
+  console.log(`🚀 CodeTales API server running on http://localhost:${PORT}`);
+  console.log(`📡 Health check: http://localhost:${PORT}/`);
+  console.log(`🏓 Ping endpoint: http://localhost:${PORT}/ping`);
+  console.log(`📚 API routes: http://localhost:${PORT}/api/`);
 });
-
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`🚀 CodeTales API server running on port ${PORT}`);
-  });
-}
 
 export default app;

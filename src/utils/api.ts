@@ -1,7 +1,7 @@
 import { ApiResponse } from '../types';
 
-// API base URL - use deployed server
-const API_BASE_URL = 'https://code-tales-server.vercel.app';
+// API base URL - use localhost for development
+const API_BASE_URL = 'http://localhost:3001';
 
 export const generateStory = async (repoUrl: string): Promise<ApiResponse> => {
   try {
