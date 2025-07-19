@@ -1,8 +1,11 @@
 import { ApiResponse } from '../types';
 
+// API base URL - use deployed server
+const API_BASE_URL = 'https://code-tales-server.vercel.app';
+
 export const generateStory = async (repoUrl: string): Promise<ApiResponse> => {
   try {
-    const apiUrl = '/api/generate-story';
+    const apiUrl = `${API_BASE_URL}/api/generate-story`;
     
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -29,7 +32,7 @@ export const generateStory = async (repoUrl: string): Promise<ApiResponse> => {
 
 export const rewriteStoryWithExperience = async (repoUrl: string, personalExperience: string): Promise<ApiResponse> => {
   try {
-    const apiUrl = '/api/rewrite-story';
+    const apiUrl = `${API_BASE_URL}/api/rewrite-story`;
     
     const response = await fetch(apiUrl, {
       method: 'POST',
