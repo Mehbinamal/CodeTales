@@ -1,1 +1,2 @@
-supabase/.env
+node_modules/
+.env
