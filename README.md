@@ -1,1 +1,111 @@
-# CodeTales
+# CodeTales - GitHub Repository Storyteller
+
+A beautiful web application that tells the story behind any public GitHub repository by analyzing its commit history, contributors, and evolution over time.
+
+## Project Structure
+
+This project is now separated into two independent parts:
+
+- **Frontend**: React + TypeScript + Vite application
+- **Backend**: Express.js API server
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Running the Backend Server
+
+1. Navigate to the server directory:
+   ```bash
+   cd server
+   ```
+
+2. Install server dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the server:
+   ```bash
+   npm run dev
+   ```
+
+The server will start on `http://localhost:3001`
+
+### Running the Frontend
+
+1. In a new terminal, navigate to the project root:
+   ```bash
+   cd /path/to/CodeTales
+   ```
+
+2. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
+
+The frontend will start on `http://localhost:5173` and will automatically proxy API requests to the backend server.
+
+## Development
+
+- **Frontend**: `npm run dev` - Starts Vite dev server
+- **Backend**: `cd server && npm run dev` - Starts Express API server
+- **Both (Optional)**: `npm run dev:both` - Starts both frontend and backend together
+- **Build**: `npm run build` - Builds the frontend for production
+
+## Features
+
+- 🎨 Beautiful, modern UI with Tailwind CSS
+- 📊 Repository analytics and insights
+- 📅 Commit timeline visualization
+- 🤖 AI-generated narrative stories
+- 📱 Responsive design
+- ⚡ Fast development with Vite
+
+## API Endpoints
+
+- `POST /api/generate-story` - Generate a story for a GitHub repository
+- `GET /api/health` - Health check endpoint
+
+## Technologies Used
+
+**Frontend:**
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React Icons
+
+**Backend:**
+- Express.js
+- Node.js
+- GitHub API integration
+
+## Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+PORT=3001
+# Optional: Add GitHub token for higher rate limits
+# GITHUB_TOKEN=your_github_personal_access_token_here
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## License
+
+MIT License - feel free to use this project for your own purposes!
