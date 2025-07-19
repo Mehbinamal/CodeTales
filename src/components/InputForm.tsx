@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Github, Sparkles } from 'lucide-react';
 
 interface InputFormProps {
@@ -8,6 +8,7 @@ interface InputFormProps {
 
 const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
   const [url, setUrl] = useState('');
+  const [autoSubmit, setAutoSubmit] = useState(false);
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,8 +18,32 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
   };
 
   const isValidGithubUrl = (url: string) => {
-    const githubPattern = /^https?:\/\/github\.com\/[\w.-]+\/[\w.-]+\/?$/;
+    // Support both github.com and custom domain URLs
+    const githubPattern = /^https?:\/\/(github\.com|[\w.-]+\.com)\/[\w.-]+\/[\w.-]+\/?$/;
     return githubPattern.test(url);
+  };
+
+  // Auto-submit when a valid GitHub URL is entered
+  useEffect(() => {
+    if (autoSubmit && url.trim() && isValidGithubUrl(url) && !isLoading) {
+      onSubmit(url.trim());
+      setAutoSubmit(false);
+    }
+  }, [url, autoSubmit, isLoading, onSubmit]);
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUrl = e.target.value;
+    setUrl(newUrl);
+    
+    // Check if this looks like a GitHub URL that should auto-submit
+    if (newUrl.trim() && isValidGithubUrl(newUrl)) {
+      // Add a small delay to allow user to finish typing
+      setTimeout(() => {
+        if (url === newUrl && newUrl.trim()) {
+          setAutoSubmit(true);
+        }
+      }, 1000); // 1 second delay
+    }
   };
 
   const isValid = url === '' || isValidGithubUrl(url);
@@ -34,7 +59,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
           <input
             type="url"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={handleUrlChange}
             placeholder="Paste your GitHub repo URL…"
             className={`w-full pl-12 pr-4 py-4 text-lg border-2 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 ${
               !isValid 
@@ -44,9 +69,15 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
             disabled={isLoading}
           />
           
-          {!isValid && (
+          {!isValid && url.trim() && (
             <p className="mt-2 text-sm text-red-600 flex items-center">
               Please enter a valid GitHub repository URL
+            </p>
+          )}
+          
+          {isValid && url.trim() && !isLoading && (
+            <p className="mt-2 text-sm text-green-600 flex items-center">
+              ✓ Valid GitHub URL - Story will be generated automatically
             </p>
           )}
         </div>
@@ -78,6 +109,9 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
           >
             https://github.com/facebook/react
           </button>
+        </p>
+        <p className="text-xs text-gray-400 mt-2">
+          💡 Tip: Paste a GitHub URL and the story will generate automatically!
         </p>
       </div>
     </div>
