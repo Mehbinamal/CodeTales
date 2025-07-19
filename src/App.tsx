@@ -5,17 +5,19 @@ import LoadingState from './components/LoadingState';
 import StoryDisplay from './components/StoryDisplay';
 import EmptyState from './components/EmptyState';
 import { CodeStory } from './types';
-import { generateStory } from './utils/api';
+import { generateStory, rewriteStoryWithExperience } from './utils/api';
 
 function App() {
   const [story, setStory] = useState<CodeStory | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentRepoUrl, setCurrentRepoUrl] = useState<string>('');
 
   const handleGenerateStory = async (repoUrl: string) => {
     setIsLoading(true);
     setError(null);
     setStory(null);
+    setCurrentRepoUrl(repoUrl);
 
     try {
       const result = await generateStory(repoUrl);
@@ -24,6 +26,27 @@ function App() {
         setStory(result.data);
       } else {
         setError(result.error || 'Failed to generate story');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRewriteStory = async (personalExperience: string) => {
+    if (!currentRepoUrl) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await rewriteStoryWithExperience(currentRepoUrl, personalExperience);
+      
+      if (result.success && result.data) {
+        setStory(result.data);
+      } else {
+        setError(result.error || 'Failed to rewrite story');
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -63,7 +86,11 @@ function App() {
         {isLoading ? (
           <LoadingState />
         ) : story ? (
-          <StoryDisplay story={story} />
+          <StoryDisplay 
+            story={story} 
+            onRewriteStory={handleRewriteStory}
+            currentRepoUrl={currentRepoUrl}
+          />
         ) : (
           <EmptyState />
         )}

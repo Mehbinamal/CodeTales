@@ -6,12 +6,15 @@ import PersonalExperience from './PersonalExperience';
 
 interface StoryDisplayProps {
   story: CodeStory;
+  onRewriteStory: (personalExperience: string) => Promise<void>;
+  currentRepoUrl: string;
 }
 
-const StoryDisplay: React.FC<StoryDisplayProps> = ({ story }) => {
+const StoryDisplay: React.FC<StoryDisplayProps> = ({ story, onRewriteStory, currentRepoUrl }) => {
   const { repository, timeline, narrative, insights } = story;
   const [showDownload, setShowDownload] = React.useState(false);
   const [personalExperience, setPersonalExperience] = React.useState('');
+  const [isRewriting, setIsRewriting] = React.useState(false);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -19,6 +22,15 @@ const StoryDisplay: React.FC<StoryDisplayProps> = ({ story }) => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const handleRewriteStory = async (experience: string) => {
+    setIsRewriting(true);
+    try {
+      await onRewriteStory(experience);
+    } finally {
+      setIsRewriting(false);
+    }
   };
 
   return (
@@ -211,6 +223,8 @@ const StoryDisplay: React.FC<StoryDisplayProps> = ({ story }) => {
       <PersonalExperience
         personalExperience={personalExperience}
         setPersonalExperience={setPersonalExperience}
+        onRewriteStory={handleRewriteStory}
+        isRewriting={isRewriting}
       />
 
       {/* Download Modal */}

@@ -26,3 +26,30 @@ export const generateStory = async (repoUrl: string): Promise<ApiResponse> => {
     };
   }
 };
+
+export const rewriteStoryWithExperience = async (repoUrl: string, personalExperience: string): Promise<ApiResponse> => {
+  try {
+    const apiUrl = '/api/rewrite-story';
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ repoUrl, personalExperience }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error rewriting story:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'An unexpected error occurred'
+    };
+  }
+};
