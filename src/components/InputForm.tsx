@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Sparkles } from 'lucide-react';
+import { Github, Sparkles, ExternalLink } from 'lucide-react';
+import { parseGitHubUrl, isValidGitHubRepo } from '../utils/api';
 
 interface InputFormProps {
   onSubmit: (url: string) => void;
@@ -17,10 +18,16 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
     }
   };
 
+  const handleDirectNavigation = () => {
+    const parsed = parseGitHubUrl(url);
+    if (parsed) {
+      const { username, repo } = parsed;
+      window.location.href = `/${username}/${repo}`;
+    }
+  };
+
   const isValidGithubUrl = (url: string) => {
-    // Support both github.com and custom domain URLs
-    const githubPattern = /^https?:\/\/(github\.com|[\w.-]+\.com)\/[\w.-]+\/[\w.-]+\/?$/;
-    return githubPattern.test(url);
+    return isValidGitHubRepo(url);
   };
 
   // Auto-submit when a valid GitHub URL is entered
@@ -82,23 +89,37 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
           )}
         </div>
         
-        <button
-          type="submit"
-          disabled={!url.trim() || !isValid || isLoading}
-          className="w-full py-4 px-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-semibold rounded-2xl transition-all duration-300 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl disabled:hover:scale-100 flex items-center justify-center space-x-2"
-        >
-          {isLoading ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>Crafting your tale...</span>
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-5 h-5" />
-              <span>Tell Me The Story</span>
-            </>
+        <div className="flex space-x-4">
+          <button
+            type="submit"
+            disabled={!url.trim() || !isValid || isLoading}
+            className="flex-1 py-4 px-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-semibold rounded-2xl transition-all duration-300 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl disabled:hover:scale-100 flex items-center justify-center space-x-2"
+          >
+            {isLoading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Crafting your tale...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                <span>Tell Me The Story</span>
+              </>
+            )}
+          </button>
+          
+          {isValid && url.trim() && !isLoading && (
+            <button
+              type="button"
+              onClick={handleDirectNavigation}
+              className="px-6 py-4 bg-gray-100 text-gray-700 text-lg font-semibold rounded-2xl transition-all duration-300 hover:bg-gray-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+              title="Go directly to repository story page"
+            >
+              <ExternalLink className="w-5 h-5" />
+              <span>Direct Link</span>
+            </button>
           )}
-        </button>
+        </div>
       </form>
       
       <div className="mt-6 text-center">
@@ -111,7 +132,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
           </button>
         </p>
         <p className="text-xs text-gray-400 mt-2">
-          💡 Tip: Paste a GitHub URL and the story will generate automatically!
+          💡 Tip: Paste a GitHub URL and the story will generate automatically! Use "Direct Link" to create shareable URLs.
         </p>
       </div>
     </div>

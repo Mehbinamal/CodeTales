@@ -69,11 +69,26 @@ The frontend will start on `http://localhost:5173` and will automatically proxy 
 - 🤖 AI-generated narrative stories
 - 📱 Responsive design
 - ⚡ Fast development with Vite
+- 🔗 Direct URL access: Visit `codetales.com/username/repo` to generate stories instantly
+- 🔄 Shareable repository story links
 
 ## API Endpoints
 
 - `POST /api/generate-story` - Generate a story for a GitHub repository
 - `GET /api/health` - Health check endpoint
+
+## URL Routing
+
+The application supports direct URL access for repository stories:
+
+- **Home Page**: `codetales.com/` - Main interface for entering repository URLs
+- **Repository Story**: `codetales.com/username/repo` - Direct access to generate a story for a specific repository
+- **Examples**:
+  - `codetales.com/facebook/react` - Story for React repository
+  - `codetales.com/microsoft/vscode` - Story for VS Code repository
+  - `codetales.com/vercel/next.js` - Story for Next.js repository
+
+The URL-based routing automatically generates stories when users visit repository-specific URLs, making it easy to share and bookmark repository stories.
 
 ## Technologies Used
 
