@@ -1,6 +1,8 @@
 import React from 'react';
-import { Calendar, Code, GitBranch, Star, Users, Clock, ExternalLink } from 'lucide-react';
+import { Calendar, Code, GitBranch, Star, Users, Clock, ExternalLink, Download, Edit3, Save, X } from 'lucide-react';
 import { CodeStory } from '../types';
+import DownloadCard from './DownloadCard';
+import PersonalExperience from './PersonalExperience';
 
 interface StoryDisplayProps {
   story: CodeStory;
@@ -8,6 +10,8 @@ interface StoryDisplayProps {
 
 const StoryDisplay: React.FC<StoryDisplayProps> = ({ story }) => {
   const { repository, timeline, narrative, insights } = story;
+  const [showDownload, setShowDownload] = React.useState(false);
+  const [personalExperience, setPersonalExperience] = React.useState('');
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -68,15 +72,25 @@ const StoryDisplay: React.FC<StoryDisplayProps> = ({ story }) => {
           </div>
           
           <div className="flex-shrink-0">
-            <a
-              href={repository.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors duration-200"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>View on GitHub</span>
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => setShowDownload(true)}
+                className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download Story</span>
+              </button>
+              
+              <a
+                href={repository.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors duration-200"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>View on GitHub</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -192,6 +206,21 @@ const StoryDisplay: React.FC<StoryDisplayProps> = ({ story }) => {
           </p>
         </div>
       </div>
+
+      {/* Personal Experience Section */}
+      <PersonalExperience
+        personalExperience={personalExperience}
+        setPersonalExperience={setPersonalExperience}
+      />
+
+      {/* Download Modal */}
+      {showDownload && (
+        <DownloadCard
+          story={story}
+          personalExperience={personalExperience}
+          onClose={() => setShowDownload(false)}
+        />
+      )}
     </div>
   );
 };
